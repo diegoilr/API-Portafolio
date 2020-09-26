@@ -97,6 +97,21 @@ router.get('/getEmpresas', async (req, res) => {
     res.json(Users);
 })
 
+//CREATE EMPRESA
+router.post('/addUser', async (req, res) => {
+    const { id_empresa, nombre_empresa} = req.body;
+
+    sql = "insert into empresa(id_empresa,nombre_empresa) values (:id_empresa,:nombre_empresa)";
+
+    await BD.Open(sql, [rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa], true);
+
+    res.status(200).json({
+        "id_empresa": id_empresa,
+        "nombre_empresa": nombre_empresa
+    })
+})
+
+
 router.get('/', async (req, res) => {
     sql = "select * from cliente";
     
