@@ -34,15 +34,26 @@ router.post('/addUser', async (req, res) => {
 
     await BD.Open(sql, [rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa], true);
 
-    res.status(200).json({
-        "rut_cliente": rut_cliente,
-        "nombre_cliente": nombre_cliente,
-        "apellido_cliente": apellido_cliente,
-        "tel_cliente": tel_cliente,
-        "nombre_usuario": nombre_usuario,
-        "password_usuario": password_usuario,
-        "empresa_id_empresa": empresa_id_empresa,
+    sql2 = "select * from cliente";
+
+    let result = await BD.Open(sql2, [], false);
+    Users = [];
+
+    result.rows.map(user => {
+        let userSchema = {
+            "RUT_CLIENTE": user[0],
+            "NOMBRE_CLIENTE": user[1],
+            "APELLIDO_CLIENTE": user[2],
+            "TEL_CLIENTE": user[3],
+            "NOMBRE_USUARIO": user[4],
+            "PASSWORD_USUARIO": user[5],
+            "EMPRESA_ID_EMPRESA": user[6]
+        }
+
+        Users.push(userSchema);
     })
+
+    res.json(Users);
 })
 
 //UPDATE USUARIO
