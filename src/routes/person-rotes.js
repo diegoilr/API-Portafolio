@@ -78,6 +78,25 @@ router.delete("/deleteUser/:codu", async (req, res) => {
 })
 
 
+//READ EMPRESA
+router.get('/getEmpresas', async (req, res) => {
+    sql = "select * from empresa";
+
+    let result = await BD.Open(sql, [], false);
+    Users = [];
+
+    result.rows.map(user => {
+        let userSchema = {
+            "id_empresa": user[0],
+            "nombre_empresa": user[1]
+        }
+
+        Users.push(userSchema);
+    })
+
+    res.json(Users);
+})
+
 router.get('/', async (req, res) => {
     sql = "select * from cliente";
     
