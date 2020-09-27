@@ -125,7 +125,7 @@ router.post('/addEmpresa', async (req, res) => {
 
     sql = "insert into empresa(id_empresa,nombre_empresa) values (:id_empresa,:nombre_empresa)";
 
-    await BD.Open(sql, [rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa], true);
+    await BD.Open(sql, [id_empresa,nombre_empresa], true);
 
     res.status(200).json({
         "id_empresa": id_empresa,
