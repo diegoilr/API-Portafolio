@@ -8,6 +8,9 @@ set LD_LIBRARY_PATH=/opt/instantclient_19_8/
 echo $LD_LIBRARY_PATH
 
 
+// Iniciar API
+npm run dev
+
 //si en dado casoo les tira error de libai.so.1
 sudo apt-get install libaio1
 
