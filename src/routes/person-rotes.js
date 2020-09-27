@@ -120,7 +120,7 @@ router.get('/getEmpresas', async (req, res) => {
 })
 
 //CREATE EMPRESA
-router.post('/addUser', async (req, res) => {
+router.post('/addEmpresa', async (req, res) => {
     const { id_empresa, nombre_empresa} = req.body;
 
     sql = "insert into empresa(id_empresa,nombre_empresa) values (:id_empresa,:nombre_empresa)";
