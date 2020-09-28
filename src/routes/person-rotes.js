@@ -100,6 +100,9 @@ router.delete("/deleteUser/:codu", async (req, res) => {
 })
 
 
+// ------------------------------------------------------------
+
+
 //READ EMPRESA
 router.get('/getEmpresas', async (req, res) => {
     sql = "select * from empresa";
@@ -127,10 +130,70 @@ router.post('/addEmpresa', async (req, res) => {
 
     await BD.Open(sql, [id_empresa,nombre_empresa], true);
 
-    res.status(200).json({
-        "id_empresa": id_empresa,
-        "nombre_empresa": nombre_empresa
+    sql2 = "select * from empresa";
+    let result = await BD.Open(sql2, [], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_empresa": user[0],
+            "nombre_empresa": user[1],
+        }
+        Empresas.push(EmpresaSchema);
     })
+
+    res.json(Empresas);
+})
+
+
+//UPDATE EMPRESA
+router.put("/updateEmpresa", async (req, res) => {
+    const { id_empresa, nombre_empresa } = req.body;
+
+    sql = "update empresa set id_empresa=:id_empresa, nombre_empresa=:nombre_empresa where id_empresa=:id_empresa";
+
+    await BD.Open(sql, [id_empresa, nombre_empresa], true);
+
+    sql2 = "select * from empresa";
+
+    let result = await BD.Open(sql2, [], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_empresa": user[0],
+            "nombre_empresa": user[1],
+        }
+        Empresas.push(EmpresaSchema);
+    })
+
+    res.json(Empresas);
+
+})
+
+// DELETE EMPRESA
+router.delete("/deleteEmpresa/:id_empresa", async (req, res) => {
+    const { id_empresa } = req.params;
+
+    sql = "delete from empresa where id_empresa=:id_empresa";
+
+    await BD.Open(sql, [id_empresa], true);
+    
+    sql2 = "select * from empresa";
+
+    let result = await BD.Open(sql2, [], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_empresa": user[0],
+            "nombre_empresa": user[1],
+        }
+        Empresas.push(EmpresaSchema);
+    })
+
+    res.json(Empresas);
+
 })
 
 
