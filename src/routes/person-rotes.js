@@ -201,7 +201,7 @@ router.delete("/deleteEmpresa/:id_empresa", async (req, res) => {
 router.post("/signup", async (req,res) =>{
     const {nombre_usuario, password_usuario} = req.body;
 
-    sql = "select nombre_cliente, apellido_cliente, tel_cliente, empresa_id_empresa from cliente where nombre_usuario =:nombre_usuario and password_usuario=:password_usuario";
+    sql = "select rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, empresa_id_empresa from cliente where nombre_usuario =:nombre_usuario and password_usuario=:password_usuario";
 
     let result = await BD.Open(sql, [nombre_usuario, password_usuario], false);
 
@@ -212,11 +212,12 @@ router.post("/signup", async (req,res) =>{
             {
                 msg: true,
                 Datauser: {
-                    "nombre_cliente": result.rows[0][0],
-                    "apellido_cliente": result.rows[0][1],
-                    "tel_cliente": result.rows[0][2],
-                    "nombre_usuario": result.rows[0][3],
-                    "empresa_id_empresa": result.rows[0][4],
+                    "rut_cliente": result.rows[0][0],
+                    "nombre_cliente": result.rows[0][1],
+                    "apellido_cliente": result.rows[0][2],
+                    "tel_cliente": result.rows[0][3],
+                    "nombre_usuario": result.rows[0][4],
+                    "empresa_id_empresa": result.rows[0][5],
 
                 }
             }
