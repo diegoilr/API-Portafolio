@@ -224,12 +224,98 @@ router.post("/signup", async (req,res) =>{
         );
     } else {
         res.status(201).json("Error");
-    }   
-
-    
-
-
+    }
 })
+
+
+//     ------------------------------ TO DO  --------------------
+//     ------------------------------ CAPACITACION --------------------
+// CREATE TABLE capacitacion (
+//     id_capacitacion                  NUMBER NOT NULL,
+//     fecha_visita                     DATE NOT NULL,
+//     desc_capacitacion                VARCHAR2(100) NOT NULL, 
+//     registro_accidente_id_accidente  NUMBER NOT NULL,
+//     profesional_rut_profesional      NUMBER NOT NULL
+// );
+// READ CAPACITACION
+// CREATE CAPACITACION
+// UPDATE CAPACITACION
+// DELETE CAPACITACION
+
+//     ------------------------------ REGISTRO_ACCIDENTE --------------------
+// CREATE TABLE registro_accidente (
+//     id_accidente            NUMBER NOT NULL,
+//     descripcion_acc         VARCHAR2(200) NOT NULL,
+//     fecha_accidente         DATE NOT NULL,
+//     cliente_rut_cliente     NUMBER NOT NULL,
+//     cliente_nombre_usuario  VARCHAR2(50) NOT NULL
+// );
+
+
+// READ REGISTRO_ACCIDENTE
+router.get('/getAccidentes', async (req, res) => {
+    sql = "select * from registro_accidente";
+
+    let result = await BD.Open(sql, [], false);
+    Users = [];
+
+    result.rows.map(user => {
+        let userSchema = {
+            "id_accidente": user[0],
+            "descripcion_acc": user[1],
+            "fecha_accidente": user[2],
+            "cliente_rut_cliente": user[3],
+            "cliente_nombre_usuario": user[4]
+        }
+
+        Users.push(userSchema);
+    })
+
+    res.json(Users);
+})
+
+
+// GET ACCIDENTE POR ID
+router.get('/getAccidente/:id_accidente', async (req, res) => {
+    const { id_accidente } = req.params;
+
+    sql = "select * from registro_accidente where id_accidente=:id_accidente";
+
+    await BD.Open(sql, [id_accidente], false);
+    
+    sql2 = "select * from registro_accidente where id_accidente=:id_accidente";
+
+    let result = await BD.Open(sql2, [id_accidente], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_accidente": user[0],
+            "descripcion_acc": user[1],
+            "fecha_accidente": user[2],
+            "cliente_rut_cliente": user[3],
+            "cliente_nombre_usuario": user[4]
+        }
+        Empresas.push(EmpresaSchema);
+    })
+
+    res.json(Empresas);
+})
+// CREATE REGISTRO_ACCIDENTE
+// UPDATE REGISTRO_ACCIDENTE
+// DELETE REGISTRO_ACCIDENTE
+
+//     ------------------------------ PROFESIONAL --------------------
+// CREATE TABLE profesional (
+//     rut_profesional       NUMBER NOT NULL,
+//     nombre_profesional    VARCHAR2(50) NOT NULL,
+//     apellido_profesional  VARCHAR2(50) NOT NULL,
+//     tel_profesional       NUMBER
+// );
+// READ PROFESIONAL
+// CREATE PROFESIONAL
+// UPDATE PROFESIONAL
+// DELETE PROFESIONAL
 
 router.get('/', async (req, res) => {
     sql = "select * from cliente";
