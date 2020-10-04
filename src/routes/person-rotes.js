@@ -319,6 +319,30 @@ router.get('/getAccidente/:id_accidente', async (req, res) => {
     res.json(Empresas);
 })
 // CREATE REGISTRO_ACCIDENTE
+router.post('/addAccidente', async (req, res) => {
+    const { id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario} = req.body;
+
+    sql = "insert into registro_accidente(id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario) values (:id_accidente, :descripcion_acc, :fecha_accidente, :cliente_rut_cliente, :cliente_nombre_usuario)";
+
+    await BD.Open(sql, [id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario], true);
+
+    sql2 = "select * from registro_accidente";
+    let result = await BD.Open(sql2, [], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_accidente": user[0],
+            "descripcion_acc": user[1],
+            "fecha_accidente": user[2],
+            "cliente_rut_cliente": user[3],
+            "cliente_nombre_usuario": user[4],
+        }
+        Empresas.push(EmpresaSchema);
+    })
+
+    res.json(Empresas);
+})
 // UPDATE REGISTRO_ACCIDENTE
 // DELETE REGISTRO_ACCIDENTE
 
