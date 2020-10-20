@@ -71,7 +71,7 @@ router.put("/updateUser", async (req, res) => {
 
     result.rows.map(user => {
         let userSchema = {
-            "RUT_CLIENTE": user[0],
+            "rut_cliente": user[0],
             "NOMBRE_CLIENTE": user[1],
             "APELLIDO_CLIENTE": user[2],
             "TEL_CLIENTE": user[3],
