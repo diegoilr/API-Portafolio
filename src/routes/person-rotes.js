@@ -201,7 +201,7 @@ router.delete("/deleteEmpresa/:id_empresa", async (req, res) => {
 router.post("/signup", async (req,res) =>{
     const {nombre_usuario, password_usuario} = req.body;
 
-    sql = "select rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, empresa_id_empresa from cliente where nombre_usuario =: nombre_usuario and password_usuario =:password_usuario";
+    sql = "select rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, empresa_id_empresa from cliente where nombre_usuario =: nombre_usuario and password_usuario =:password_usuario";
 
     let result = await BD.Open(sql, [nombre_usuario, password_usuario], false);
 
@@ -216,7 +216,8 @@ router.post("/signup", async (req,res) =>{
                 "nombre_cliente": result.rows[0][1],
                 "apellido_cliente": result.rows[0][2],
                 "tel_cliente": result.rows[0][3],
-                "empresa_id_empresa": result.rows[0][4]
+                "nombre_usuario": result.rows[0][4],
+                "empresa_id_empresa": result.rows[0][5]
             }
 
         });
@@ -293,16 +294,16 @@ router.get('/getAccidentes', async (req, res) => {
 
 
 // GET ACCIDENTE POR ID
-router.get('/getAccidente/:id_accidente', async (req, res) => {
-    const { id_accidente } = req.params;
+router.get('/getAccidente/:cliente_nombre_usuario', async (req, res) => {
+    const { cliente_nombre_usuario } = req.params;
 
-    sql = "select * from registro_accidente where id_accidente=:id_accidente";
+    sql = "select * from registro_accidente where cliente_nombre_usuario=:cliente_nombre_usuario";
 
-    await BD.Open(sql, [id_accidente], false);
+    await BD.Open(sql, [cliente_nombre_usuario], false);
     
-    sql2 = "select * from registro_accidente where id_accidente=:id_accidente";
+    sql2 = "select * from registro_accidente where cliente_nombre_usuario=:cliente_nombre_usuario";
 
-    let result = await BD.Open(sql2, [id_accidente], false);
+    let result = await BD.Open(sql2, [cliente_nombre_usuario], false);
     Empresas = [];
 
     result.rows.map(user => {
@@ -322,7 +323,7 @@ router.get('/getAccidente/:id_accidente', async (req, res) => {
 router.post('/addAccidente', async (req, res) => {
     const { id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario} = req.body;
 
-    sql = "insert into registro_accidente(id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario) values (:id_accidente, :descripcion_acc, :fecha_accidente, :cliente_rut_cliente, :cliente_nombre_usuario)";
+    sql = "insert into registro_accidente(id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario) values (:id_accidente, :descripcion_acc, TO_DATE(:fecha_accidente, 'YYYY/MM/DD'), :cliente_rut_cliente, :cliente_nombre_usuario)";
 
     await BD.Open(sql, [id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario], true);
 
