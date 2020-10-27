@@ -297,11 +297,11 @@ router.get('/getAccidentes', async (req, res) => {
 router.get('/getAccidente/:cliente_nombre_usuario', async (req, res) => {
     const { cliente_nombre_usuario } = req.params;
 
-    sql = "select * from registro_accidente where cliente_nombre_usuario=:cliente_nombre_usuario";
+    sql = "select * from registro_accidente where cliente_nombre_usuario=:cliente_nombre_usuario order by id_accidente";
 
     await BD.Open(sql, [cliente_nombre_usuario], false);
     
-    sql2 = "select * from registro_accidente where cliente_nombre_usuario=:cliente_nombre_usuario";
+    sql2 = "select * from registro_accidente where cliente_nombre_usuario=:cliente_nombre_usuario order by id_accidente";
 
     let result = await BD.Open(sql2, [cliente_nombre_usuario], false);
     Empresas = [];
