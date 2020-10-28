@@ -11,14 +11,14 @@ router.get('/getUsers', async (req, res) => {
 
     result.rows.map(user => {
         let userSchema = {
-            "RUT_CLIENTE": user[0],
-            "NOMBRE_CLIENTE": user[1],
-            "APELLIDO_CLIENTE": user[2],
-            "TEL_CLIENTE": user[3],
-            "NOMBRE_USUARIO": user[4],
-            "PASSWORD_USUARIO": user[5],
-            "EMPRESA_ID_EMPRESA": user[6],
-            "TIPO_USUARIO": user[7]
+            "rut_cliente": user[0],
+            "nombre_cliente": user[1],
+            "apellido_cliente": user[2],
+            "tel_cliente": user[3],
+            "nombre_usuario": user[4],
+            "password_usuario": user[5],
+            "empresa_id_empresa": user[6],
+            "tipo_usuario": user[7]
         }
 
         Users.push(userSchema);
@@ -42,14 +42,14 @@ router.post('/addUser', async (req, res) => {
 
     result.rows.map(user => {
         let userSchema = {
-            "RUT_CLIENTE": user[0],
-            "NOMBRE_CLIENTE": user[1],
-            "APELLIDO_CLIENTE": user[2],
-            "TEL_CLIENTE": user[3],
-            "NOMBRE_USUARIO": user[4],
-            "PASSWORD_USUARIO": user[5],
-            "EMPRESA_ID_EMPRESA": user[6],
-            "TIPO_USUARIO": user[7]
+            "rut_cliente": user[0],
+            "nombre_cliente": user[1],
+            "apellido_cliente": user[2],
+            "tel_cliente": user[3],
+            "nombre_usuario": user[4],
+            "password_usuario": user[5],
+            "empresa_id_empresa": user[6],
+            "tipo_usuario": user[7]
         }
 
         Users.push(userSchema);
