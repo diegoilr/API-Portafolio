@@ -17,7 +17,8 @@ router.get('/getUsers', async (req, res) => {
             "TEL_CLIENTE": user[3],
             "NOMBRE_USUARIO": user[4],
             "PASSWORD_USUARIO": user[5],
-            "EMPRESA_ID_EMPRESA": user[6]
+            "EMPRESA_ID_EMPRESA": user[6],
+            "TIPO_USUARIO": user[7]
         }
 
         Users.push(userSchema);
@@ -30,7 +31,7 @@ router.get('/getUsers', async (req, res) => {
 router.post('/addUser', async (req, res) => {
     const { rut_cliente, nombre_cliente, apellido_cliente,  tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa} = req.body;
 
-    sql = "insert into cliente(rut_cliente,nombre_cliente,apellido_cliente,tel_cliente,nombre_usuario,password_usuario,empresa_id_empresa) values (:rut_cliente,:nombre_cliente,:apellido_cliente, :tel_cliente,:nombre_usuario,:password_usuario,:empresa_id_empresa)";
+    sql = "insert into cliente(rut_cliente,nombre_cliente,apellido_cliente,tel_cliente,nombre_usuario,password_usuario,empresa_id_empresa, tipo_usuario) values (:rut_cliente,:nombre_cliente,:apellido_cliente, :tel_cliente,:nombre_usuario,:password_usuario,:empresa_id_empresa, 1)";
 
     await BD.Open(sql, [rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa], true);
 
@@ -47,7 +48,8 @@ router.post('/addUser', async (req, res) => {
             "TEL_CLIENTE": user[3],
             "NOMBRE_USUARIO": user[4],
             "PASSWORD_USUARIO": user[5],
-            "EMPRESA_ID_EMPRESA": user[6]
+            "EMPRESA_ID_EMPRESA": user[6],
+            "TIPO_USUARIO": user[7]
         }
 
         Users.push(userSchema);
@@ -58,11 +60,11 @@ router.post('/addUser', async (req, res) => {
 
 //UPDATE USUARIO
 router.put("/updateUser", async (req, res) => {
-    const { rut_cliente, nombre_cliente, apellido_cliente,  tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa } = req.body;
+    const { rut_cliente, nombre_cliente, apellido_cliente,  tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa, tipo_usuario } = req.body;
 
-    sql = "update cliente set nombre_cliente=:nombre_cliente, apellido_cliente=:apellido_cliente, tel_cliente=:tel_cliente, nombre_usuario=:nombre_usuario, password_usuario=:password_usuario, empresa_id_empresa=:empresa_id_empresa where rut_cliente=:rut_cliente";
+    sql = "update cliente set nombre_cliente=:nombre_cliente, apellido_cliente=:apellido_cliente, tel_cliente=:tel_cliente, nombre_usuario=:nombre_usuario, password_usuario=:password_usuario, empresa_id_empresa=:empresa_id_empresa tipo_ususario=:tipo_usuario where rut_cliente=:rut_cliente";
 
-    await BD.Open(sql, [rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa], true);
+    await BD.Open(sql, [rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa, tipo_usuario], true);
 
     sql2 = "select * from cliente";
 
@@ -77,7 +79,8 @@ router.put("/updateUser", async (req, res) => {
             "TEL_CLIENTE": user[3],
             "NOMBRE_USUARIO": user[4],
             "PASSWORD_USUARIO": user[5],
-            "EMPRESA_ID_EMPRESA": user[6]
+            "EMPRESA_ID_EMPRESA": user[6],
+            "TIPO_USUARIO": user[6],
         }
 
         Users.push(userSchema);
@@ -201,7 +204,7 @@ router.delete("/deleteEmpresa/:id_empresa", async (req, res) => {
 router.post("/signup", async (req,res) =>{
     const {nombre_usuario, password_usuario} = req.body;
 
-    sql = "select rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, empresa_id_empresa from cliente where nombre_usuario =: nombre_usuario and password_usuario =:password_usuario";
+    sql = "select rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, empresa_id_empresa, tipo_usuario from cliente where nombre_usuario =: nombre_usuario and password_usuario =:password_usuario";
 
     let result = await BD.Open(sql, [nombre_usuario, password_usuario], false);
 
@@ -217,7 +220,8 @@ router.post("/signup", async (req,res) =>{
                 "apellido_cliente": result.rows[0][2],
                 "tel_cliente": result.rows[0][3],
                 "nombre_usuario": result.rows[0][4],
-                "empresa_id_empresa": result.rows[0][5]
+                "empresa_id_empresa": result.rows[0][5],
+                "tipo_usuario": result.rows[0][6]
             }
 
         });
@@ -321,11 +325,11 @@ router.get('/getAccidente/:cliente_nombre_usuario', async (req, res) => {
 })
 // CREATE REGISTRO_ACCIDENTE
 router.post('/addAccidente', async (req, res) => {
-    const { id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario} = req.body;
+    const {descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario} = req.body;
 
-    sql = "insert into registro_accidente(id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario) values (:id_accidente, :descripcion_acc, TO_DATE(:fecha_accidente, 'YYYY/MM/DD'), :cliente_rut_cliente, :cliente_nombre_usuario)";
+    sql = "insert into registro_accidente(id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario) values (id_accidente.nextval, :descripcion_acc, TO_DATE(:fecha_accidente, 'yyyy/mm/dd'), :cliente_rut_cliente, :cliente_nombre_usuario)";
 
-    await BD.Open(sql, [id_accidente, descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario], true);
+    await BD.Open(sql, [descripcion_acc, fecha_accidente, cliente_rut_cliente, cliente_nombre_usuario], true);
 
     sql2 = "select * from registro_accidente";
     let result = await BD.Open(sql2, [], false);
@@ -333,11 +337,10 @@ router.post('/addAccidente', async (req, res) => {
 
     result.rows.map(user => {
         let EmpresaSchema = {
-            "id_accidente": user[0],
-            "descripcion_acc": user[1],
-            "fecha_accidente": user[2],
-            "cliente_rut_cliente": user[3],
-            "cliente_nombre_usuario": user[4],
+            "descripcion_acc": user[0],
+            "fecha_accidente": user[1],
+            "cliente_rut_cliente": user[2],
+            "cliente_nombre_usuario": user[3],
         }
         Empresas.push(EmpresaSchema);
     })
