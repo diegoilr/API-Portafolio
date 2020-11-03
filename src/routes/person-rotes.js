@@ -29,7 +29,7 @@ router.get('/getUsers', async (req, res) => {
 
 //CREATE USUARIO
 router.post('/addUser', async (req, res) => {
-    const { rut_cliente, nombre_cliente, apellido_cliente,  tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa} = req.body;
+    const { rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa} = req.body;
 
     sql = "insert into cliente(rut_cliente,nombre_cliente,apellido_cliente,tel_cliente,nombre_usuario,password_usuario,empresa_id_empresa, tipo_usuario) values (:rut_cliente,:nombre_cliente,:apellido_cliente, :tel_cliente,:nombre_usuario,:password_usuario,:empresa_id_empresa, 1)";
 
@@ -60,11 +60,11 @@ router.post('/addUser', async (req, res) => {
 
 //UPDATE USUARIO
 router.put("/updateUser", async (req, res) => {
-    const { rut_cliente, nombre_cliente, apellido_cliente,  tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa, tipo_usuario } = req.body;
+    const { rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, empresa_id_empresa, tipo_usuario } = req.body;
 
-    sql = "update cliente set nombre_cliente=:nombre_cliente, apellido_cliente=:apellido_cliente, tel_cliente=:tel_cliente, nombre_usuario=:nombre_usuario, password_usuario=:password_usuario, empresa_id_empresa=:empresa_id_empresa tipo_ususario=:tipo_usuario where rut_cliente=:rut_cliente";
+    sql = "update cliente set rut_cliente=:rut_cliente, nombre_cliente=:nombre_cliente, apellido_cliente=:apellido_cliente, tel_cliente=:tel_cliente, nombre_usuario=:nombre_usuario, empresa_id_empresa=:empresa_id_empresa, tipo_usuario=:tipo_usuario where rut_cliente=:rut_cliente";
 
-    await BD.Open(sql, [rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, password_usuario, empresa_id_empresa, tipo_usuario], true);
+    await BD.Open(sql, [rut_cliente, nombre_cliente, apellido_cliente, tel_cliente, nombre_usuario, empresa_id_empresa, tipo_usuario], true);
 
     sql2 = "select * from cliente";
 
@@ -74,13 +74,12 @@ router.put("/updateUser", async (req, res) => {
     result.rows.map(user => {
         let userSchema = {
             "rut_cliente": user[0],
-            "NOMBRE_CLIENTE": user[1],
-            "APELLIDO_CLIENTE": user[2],
-            "TEL_CLIENTE": user[3],
-            "NOMBRE_USUARIO": user[4],
-            "PASSWORD_USUARIO": user[5],
-            "EMPRESA_ID_EMPRESA": user[6],
-            "TIPO_USUARIO": user[6],
+            "nombre_cliente": user[1],
+            "apellido_cliente": user[2],
+            "tel_cliente": user[3],
+            "nombre_usuario": user[4],
+            "empresa_id_empresa": user[6],
+            "tipo_usuario": user[7],
         }
 
         Users.push(userSchema);
@@ -92,7 +91,7 @@ router.put("/updateUser", async (req, res) => {
 
 
 //DELETE USUARIO
-router.delete("/deleteUser/:codu", async (req, res) => {
+router.delete("/deleteUser/:rut_cliente", async (req, res) => {
     const { codu } = req.params;
 
     sql = "delete from cliente where rut_cliente=:rut_cliente";
@@ -260,7 +259,52 @@ router.post("/signup", async (req,res) =>{
 //     profesional_rut_profesional      NUMBER NOT NULL
 // );
 // READ CAPACITACION
+router.get('/getCapacitaciones', async (req,res)=>{
+    sql = "select * from capacitacion";
+
+    let result = await BD.Open(sql, [], false);
+    Users = [];
+
+    result.rows.map(user => {
+        let userSchema = {
+            "id_capacitacion": user[0],
+            "fecha_visita": user[1],
+            "desc_capacitacion": user[2],
+            "registro_accidente_id_accidente": user[3],
+            "profesional_rut_profesional": user[4]
+        }
+
+        Users.push(userSchema);
+    })
+
+    res.json(Users);
+})
+
 // CREATE CAPACITACION
+router.post('/addCapacitacion', async (req, res) => {
+    const {fecha_visita, desc_capacitacion, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente} = req.body;
+
+    sql = "insert into capacitacion(id_capacitacion, fecha_visita, desc_capacitacion, profesional_rut_profesional, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente) values (id_capacitacion.nextval, TO_DATE(:fecha_visita, 'yyyy/mm/dd'), :desc_capacitacion, 0, :empresa_id_empresa, :cliente_nombre_usuario, :cliente_rut_cliente)";
+
+    await BD.Open(sql, [fecha_visita, desc_capacitacion, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente], true);
+
+    sql2 = "select * from registro_accidente";
+    let result = await BD.Open(sql2, [], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "fecha_visita": user[0],
+            "desc_capacitacion": user[1],
+            "empresa_id_empresa": user[2],
+            "cliente_nombre_usuario": user[3], 
+            "cliente_rut_cliente": user[4], 
+        }
+        Empresas.push(EmpresaSchema);
+    })
+
+    res.json(Empresas);
+})
 // UPDATE CAPACITACION
 // DELETE CAPACITACION
 
