@@ -253,7 +253,7 @@ router.post("/signup", async (req,res) =>{
 //     ------------------------------ CAPACITACION --------------------
 // CREATE TABLE capacitacion (
 //     id_capacitacion                  NUMBER NOT NULL,
-//     fecha_visita                     DATE NOT NULL,
+//     fecha_visita                 |    DATE NOT NULL,
 //     desc_capacitacion                VARCHAR2(100) NOT NULL, 
 //     registro_accidente_id_accidente  NUMBER NOT NULL,
 //     profesional_rut_profesional      NUMBER NOT NULL
@@ -270,14 +270,43 @@ router.get('/getCapacitaciones', async (req,res)=>{
             "id_capacitacion": user[0],
             "fecha_visita": user[1],
             "desc_capacitacion": user[2],
-            "registro_accidente_id_accidente": user[3],
-            "profesional_rut_profesional": user[4]
+            "profesional_rut_profesional": user[3],
+            "empresa_id_empresa": user[4],
+            "cliente_nombre_usuario": user[5],
+            "client_rut_cliente": user[6],
         }
 
         Users.push(userSchema);
     })
 
     res.json(Users);
+})
+
+// GET CAPACITACIONES POR USER
+router.get('/getCapacitacion/:cliente_nombre_usuario', async (req, res) => {
+    const { cliente_nombre_usuario } = req.params;
+
+    sql = "select * from capacitacion where cliente_nombre_usuario=:cliente_nombre_usuario order by id_capacitacion";
+
+    await BD.Open(sql, [cliente_nombre_usuario], false);
+    
+    sql2 = "select * from capacitacion where cliente_nombre_usuario=:cliente_nombre_usuario order by id_capacitacion";
+
+    let result = await BD.Open(sql2, [cliente_nombre_usuario], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_capacitacion": user[0],
+            "fecha_visita": user[1],
+            "desc_capacitacion": user[2],
+            "empresa_id_empresa": user[3],
+            "cliente_nombre_usuario": user[4],
+            "cliente_rut_cliente": user[5]
+        }
+        Empresas.push(EmpresaSchema);
+    })
+    res.json(Empresas);
 })
 
 // CREATE CAPACITACION
@@ -305,6 +334,7 @@ router.post('/addCapacitacion', async (req, res) => {
 
     res.json(Empresas);
 })
+
 // UPDATE CAPACITACION
 // DELETE CAPACITACION
 
