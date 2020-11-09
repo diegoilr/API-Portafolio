@@ -437,7 +437,7 @@ router.post('/addCapacitacion', async (req, res) => {
 router.put("/updateCapacitacion", async (req, res) => {
     const {id_capacitacion, fecha_visita, desc_capacitacion, profesional_rut_profesional, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente } = req.body;
 
-    sql = "update capacitacion set id_capacitacion=:id_capacitacion, fecha_visita=TO_DATE(:fecha_visita, 'yyyy/mm/dd'), desc_capacitacion=:desc_capacitacion, profesional_rut_profesional=:profesional_rut_profesional, empresa_id_empresa=:empresa_id_empresa, cliente_nombre_usuario=:cliente_nombre_usuario, cliente_rut_cliente=:cliente_rut_cliente  where id_capacitacion=id_capacitacion";
+    sql = "update capacitacion set id_capacitacion=:id_capacitacion, fecha_visita=TO_DATE(:fecha_visita, 'yyyy/mm/dd'), desc_capacitacion=:desc_capacitacion, profesional_rut_profesional=:profesional_rut_profesional, empresa_id_empresa=:empresa_id_empresa, cliente_nombre_usuario=:cliente_nombre_usuario, cliente_rut_cliente=:cliente_rut_cliente  where id_capacitacion=:id_capacitacion";
 
     await BD.Open(sql, [id_capacitacion, fecha_visita, desc_capacitacion, profesional_rut_profesional, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente], true);
 
