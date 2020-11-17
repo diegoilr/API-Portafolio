@@ -407,6 +407,33 @@ router.get('/getCapacitacion/:cliente_nombre_usuario', async (req, res) => {
     res.json(Empresas);
 })
 
+// GET CAPACITACIONES POR PROFESIONAL
+router.get('/getCapacitaciones/:profesional_rut_profesional', async (req, res) => {
+    const { profesional_rut_profesional } = req.params;
+
+    sql = "select * from capacitacion where profesional_rut_profesional=:profesional_rut_profesional order by id_capacitacion";
+
+    await BD.Open(sql, [profesional_rut_profesional], false);
+    
+    sql2 = "select * from capacitacion where profesional_rut_profesional=:profesional_rut_profesional order by id_capacitacion";
+
+    let result = await BD.Open(sql2, [profesional_rut_profesional], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_capacitacion": user[0],
+            "fecha_visita": user[1],
+            "desc_capacitacion": user[2],
+            "empresa_id_empresa": user[3],
+            "cliente_nombre_usuario": user[4],
+            "cliente_rut_cliente": user[5]
+        }
+        Empresas.push(EmpresaSchema);
+    })
+    res.json(Empresas);
+})
+
 // CREATE CAPACITACION
 router.post('/addCapacitacion', async (req, res) => {
     const {fecha_visita, desc_capacitacion, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente} = req.body;
