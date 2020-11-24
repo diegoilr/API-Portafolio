@@ -356,7 +356,7 @@ router.post("/signup", async (req,res) =>{
 //     registro_accidente_id_accidente  NUMBER NOT NULL,
 //     profesional_rut_profesional      NUMBER NOT NULL
 // );
-// READ CAPACITACION
+//* READ CAPACITACION
 router.get('/getCapacitaciones', async (req,res)=>{
     sql = "select * from capacitacion";
 
@@ -380,7 +380,7 @@ router.get('/getCapacitaciones', async (req,res)=>{
     res.json(Users);
 })
 
-// GET CAPACITACIONES POR USER
+//* GET CAPACITACIONES POR USER
 router.get('/getCapacitacion/:cliente_nombre_usuario', async (req, res) => {
     const { cliente_nombre_usuario } = req.params;
 
@@ -407,7 +407,7 @@ router.get('/getCapacitacion/:cliente_nombre_usuario', async (req, res) => {
     res.json(Empresas);
 })
 
-// GET CAPACITACIONES POR PROFESIONAL
+//* GET CAPACITACIONES POR PROFESIONAL
 router.get('/getCapacitaciones/:profesional_rut_profesional', async (req, res) => {
     const { profesional_rut_profesional } = req.params;
 
@@ -434,7 +434,7 @@ router.get('/getCapacitaciones/:profesional_rut_profesional', async (req, res) =
     res.json(Empresas);
 })
 
-// CREATE CAPACITACION
+//* CREATE CAPACITACION
 router.post('/addCapacitacion', async (req, res) => {
     const {fecha_visita, desc_capacitacion, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente} = req.body;
 
@@ -460,7 +460,7 @@ router.post('/addCapacitacion', async (req, res) => {
     res.json(Empresas);
 })
 
-// UPDATE CAPACITACION
+//* UPDATE CAPACITACION
 router.put("/updateCapacitacion", async (req, res) => {
     const {id_capacitacion, fecha_visita, desc_capacitacion, profesional_rut_profesional, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente } = req.body;
 
