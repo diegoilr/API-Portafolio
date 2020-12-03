@@ -434,6 +434,33 @@ router.get('/getCapacitaciones/:profesional_rut_profesional', async (req, res) =
     res.json(Empresas);
 })
 
+//* GET CAPACITACIONES QUE EL PROFESIONAL NO TIENE ASIGNADAS
+router.get('/getCapacitacionesNoAsignadas/:profesional_rut_profesional', async (req, res) => {
+    const { profesional_rut_profesional } = req.params;
+
+    sql = "select * from capacitacion where profesional_rut_profesional!=:profesional_rut_profesional AND profesional_rut_profesional = 0 order by id_capacitacion";
+
+    await BD.Open(sql, [profesional_rut_profesional], false);
+    
+    sql2 = "select * from capacitacion where profesional_rut_profesional!=:profesional_rut_profesional AND profesional_rut_profesional = 0 order by id_capacitacion";
+
+    let result = await BD.Open(sql2, [profesional_rut_profesional], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_capacitacion": user[0],
+            "fecha_visita": user[1],
+            "desc_capacitacion": user[2],
+            "empresa_id_empresa": user[3],
+            "cliente_nombre_usuario": user[4],
+            "cliente_rut_cliente": user[5]
+        }
+        Empresas.push(EmpresaSchema);
+    })
+    res.json(Empresas);
+})
+
 //* CREATE CAPACITACION
 router.post('/addCapacitacion', async (req, res) => {
     const {fecha_visita, desc_capacitacion, empresa_id_empresa, cliente_nombre_usuario, cliente_rut_cliente} = req.body;
@@ -490,8 +517,37 @@ router.put("/updateCapacitacion", async (req, res) => {
 
 })
 
+//* ASIGNAR CAPACITACION
+router.put("/asignarCapacitacion", async (req, res) => {
+    const {profesional_rut_profesional} = req.body;
 
-// DELETE CAPACITACION
+    sql = "update capacitacion set profesional_rut_profesional=:profesional_rut_profesional where id_capacitacion=:id_capacitacion";
+
+    await BD.Open(sql, [profesional_rut_profesional], true);
+
+    sql2 = "select * from capacitacion";
+
+    let result = await BD.Open(sql2, [], false);
+    Empresas = [];
+
+    result.rows.map(user => {
+        let EmpresaSchema = {
+            "id_capacitacion": user[0],
+            "fecha_visita": user[1],
+            "desc_capacitacion": user[2],
+            "profesional_rut_profesional": user[3],
+            "empresa_id_empresa": user[4],
+            "cliente_nombre_usuario": user[5],
+            "cliente_rut_cliente": user[6]
+        }
+        Empresas.push(EmpresaSchema);
+    })
+
+    res.json(Empresas);
+
+})
+
+//* DELETE CAPACITACION
 
 //     ------------------------------ REGISTRO_ACCIDENTE --------------------
 // CREATE TABLE registro_accidente (
