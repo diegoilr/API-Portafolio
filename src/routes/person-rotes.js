@@ -519,11 +519,11 @@ router.put("/updateCapacitacion", async (req, res) => {
 
 //* ASIGNAR CAPACITACION
 router.put("/asignarCapacitacion", async (req, res) => {
-    const {profesional_rut_profesional} = req.body;
+    const {id_capacitacion, profesional_rut_profesional} = req.body;
 
-    sql = "update capacitacion set profesional_rut_profesional=:profesional_rut_profesional where id_capacitacion=:id_capacitacion";
+    sql = "update capacitacion set id_capacitacion=:id_capacitacion, profesional_rut_profesional=:profesional_rut_profesional where id_capacitacion=:id_capacitacion";
 
-    await BD.Open(sql, [profesional_rut_profesional], true);
+    await BD.Open(sql, [id_capacitacion, profesional_rut_profesional], true);
 
     sql2 = "select * from capacitacion";
 
