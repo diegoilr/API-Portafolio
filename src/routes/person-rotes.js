@@ -411,11 +411,11 @@ router.get('/getCapacitacion/:cliente_nombre_usuario', async (req, res) => {
 router.get('/getCapacitaciones/:profesional_rut_profesional', async (req, res) => {
     const { profesional_rut_profesional } = req.params;
 
-    sql = "select * from capacitacion where profesional_rut_profesional=:profesional_rut_profesional order by id_capacitacion";
+    sql = "select * from capacitacion where profesional_rut_profesional=:rut_cliente order by id_capacitacion";
 
     await BD.Open(sql, [profesional_rut_profesional], false);
     
-    sql2 = "select * from capacitacion where profesional_rut_profesional=:profesional_rut_profesional order by id_capacitacion";
+    sql2 = "select * from capacitacion where profesional_rut_profesional=:rut_cliente order by id_capacitacion";
 
     let result = await BD.Open(sql2, [profesional_rut_profesional], false);
     Empresas = [];
